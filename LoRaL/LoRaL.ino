@@ -266,7 +266,10 @@ void send2Sleep(long mills){
      senseBoxIO.powerI2C(false);
      delay(mills);
      senseBoxIO.powerUART(true);
+     delay(250);
+    SDS_UART_PORT.begin(9600);
      senseBoxIO.powerI2C(true);
+     delay(250);
 }
 void setup() {
   #ifdef ENABLE_DEBUG
