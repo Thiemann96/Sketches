@@ -25,7 +25,7 @@
 
 // Uncomment the next line to get debugging messages printed on the Serial port
 // Do not leave this enabled for long time use
-// #define ENABLE_DEBUG
+#define ENABLE_DEBUG
 
 #ifdef ENABLE_DEBUG
 #define DEBUG(str) Serial.println(str)
@@ -156,6 +156,7 @@ void onEvent (ev_t ev) {
         DEBUG(F(" bytes of payload"));
       }
       // Schedule next transmission
+      send2Sleep(50000);
       os_setTimedCallback(&sendjob, os_getTime()+sec2osticks(TX_INTERVAL), do_send);
       break;
     case EV_LOST_TSYNC:
@@ -251,14 +252,22 @@ void do_send(osjob_t* j){
         attempt++;
       }
     #endif
-
+    
     // Prepare upstream data transmission at the next possible time.
     LMIC_setTxData2(1, message.getBytes(), message.getLength(), 0);
     DEBUG(F("Packet queued"));
+
   }
   // Next TX is scheduled after TX_COMPLETE event.
 }
+void send2Sleep(long mills){
 
+     senseBoxIO.powerUART(false);
+     senseBoxIO.powerI2C(false);
+     delay(mills);
+     senseBoxIO.powerUART(true);
+     senseBoxIO.powerI2C(true);
+}
 void setup() {
   #ifdef ENABLE_DEBUG
     Serial.begin(9600);
@@ -267,6 +276,7 @@ void setup() {
 
   // RFM9X (LoRa-Bee) in XBEE1 Socket
   senseBoxIO.powerXB1(false); // power off to reset RFM9X
+  senseBoxIO.powerXB2(false);
   delay(250);
   senseBoxIO.powerXB1(true);  // power on
 
