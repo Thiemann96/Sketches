@@ -1,4 +1,4 @@
-
+#include "System_functions.h"
 void System_functions::connectToWlan(){
     senseBoxIO.statusNone();
   uint8_t status = WL_IDLE_STATUS;
@@ -391,6 +391,9 @@ void System_functions::startAllSensors(){
     #endif
     #ifdef SDS_CONNECTED
         SDS_CONNECTED.begin(9600);
+    #endif
+    #ifdef GPS_CONNECTED
+        gps.begin();
     #endif
 
 

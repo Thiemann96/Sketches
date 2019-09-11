@@ -6,7 +6,7 @@
 #define senseBoxConfig_H
 
 /* Power save mode  */
-#define POWER_SAVE
+//#define POWER_SAVE
 /* Serial Port for SDS */
 #define DEBUG_MODE
 /* Connected sensors */
@@ -14,6 +14,7 @@
 // #define BMP280_CONNECTED
 // #define LIGHT_CONNECTED
 #define SDS_CONNECTED (Serial1)
+#define GPS_CONNECTED
 #define NUM_SENSORS 2
 /* WIFI */
 #define SSID "Reedu Guest"

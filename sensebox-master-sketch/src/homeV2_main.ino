@@ -36,6 +36,7 @@ void setup(){
         senseBoxIO.powerXB2(false);
     #endif
     MCU.startAllSensors();
+    // test for wifi bee
     MCU.checkForWINC1500();
     // if test has passed connect to WiFi
     MCU.connectToWlan();
@@ -63,6 +64,7 @@ void loop(){
                 MCU.startAllSensors();
                 Serial.println("Warming up! SDS needs 30 seconds!");
                 delay(30000);
+                Serial.println("Warm up done!");
             #endif
             return;
         }
