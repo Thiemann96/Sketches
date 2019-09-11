@@ -103,6 +103,9 @@ static osjob_t sendjob;
 // cycle limitations).
 const unsigned TX_INTERVAL = 60;
 
+// Configure how many miliseconds(ms) the MCU should sleep after sending data
+// 300000 = 5 minutes
+const long time2sleep = 300000;
 // Pin mapping
 const lmic_pinmap lmic_pins = {
   .nss = PIN_XB1_CS,
@@ -156,7 +159,7 @@ void onEvent (ev_t ev) {
         DEBUG(F(" bytes of payload"));
       }
       // Schedule next transmission
-      send2Sleep(300000);
+      send2Sleep(time2sleep);
       os_setTimedCallback(&sendjob, os_getTime()+sec2osticks(TX_INTERVAL), do_send);
       break;
     case EV_LOST_TSYNC:
