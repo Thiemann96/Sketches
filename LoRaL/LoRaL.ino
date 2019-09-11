@@ -156,7 +156,7 @@ void onEvent (ev_t ev) {
         DEBUG(F(" bytes of payload"));
       }
       // Schedule next transmission
-      send2Sleep(50000);
+      send2Sleep(300000);
       os_setTimedCallback(&sendjob, os_getTime()+sec2osticks(TX_INTERVAL), do_send);
       break;
     case EV_LOST_TSYNC:
@@ -267,7 +267,7 @@ void send2Sleep(long mills){
      delay(mills);
      senseBoxIO.powerUART(true);
      delay(250);
-    SDS_UART_PORT.begin(9600);
+     SDS_UART_PORT.begin(9600);
      senseBoxIO.powerI2C(true);
      delay(250);
 }
