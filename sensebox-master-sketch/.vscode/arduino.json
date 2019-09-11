@@ -1,0 +1,7 @@
+{
+    "port": "/dev/ttyACM0",
+    "board": "sensebox:samd:sb",
+    "configuration": "power=on",
+    "programmer": "AVRISP mkII",
+    "sketch": "src/homeV2_main.ino"
+}
