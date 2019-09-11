@@ -1,0 +1,6 @@
+{
+    "port": "/dev/ttyACM0",
+    "board": "sensebox:samd:sb",
+    "configuration": "power=on",
+    "sketch": "LoRaL.ino"
+}
