@@ -221,6 +221,11 @@ void System_functions::sendData(){
       Serial.println("-Done. Waiting for server response...\n");
       delay(500);
     #endif
+    // Reading answer from server //
+    while (senseBox_client.available()){
+        char c = senseBox_client.read();
+        Serial.write(c);
+      }
   }
   else{
   // If connection failed report //
@@ -370,5 +375,23 @@ void System_functions::checkForWINC1500(){
       delay(1000);
     }
   }
+
+}
+
+void System_functions::startAllSensors(){
+      #ifdef HDC1080_CONNECTED
+        hdc.begin();
+    #endif
+    #ifdef BMP280_CONNECTED
+        bmp.begin();
+    #endif
+    #ifdef LIGHT_CONNECTED
+        veml.begin();
+        tsl.begin();
+    #endif
+    #ifdef SDS_CONNECTED
+        SDS_CONNECTED.begin(9600);
+    #endif
+
 
 }

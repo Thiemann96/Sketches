@@ -29,18 +29,11 @@
 const long interval = 30000;
 
 void setup(){
-    #ifdef HDC1080_CONNECTED
-        hdc.begin();
-    #endif
-    #ifdef BMP280_CONNECTED
-        bmp.begin();
-    #endif
-    #ifdef LIGHT_CONNECTED
-        veml.begin();
-        tsl.begin();
-    #endif
-    #ifdef SDS_CONNECTED
-        SDS.begin(9600);
+
+    MCU.startAllSensors();
+
+    #ifdef POWER_SAVE
+        senseBoxIO.powerXB2(false);
     #endif
     MCU.checkForWINC1500();
     // if test has passed connect to WiFi
@@ -48,13 +41,31 @@ void setup(){
     MCU.testSensors();
 }
 void loop(){
-    Serial.println("going to sleep now");
-    senseBoxIO.powerUART(false);
-    senseBoxIO.powerI2C(false);
-    senseBoxIO.powerXB2(false);
-    delay(10000);
-    Serial.println("Waking up");
-    senseBoxIO.powerAll();
-    delay(2000);
+    unsigned long start = millis();
     MCU.readSensorsAndSendData();
+    // schedule next round of measurements
+    Serial.println("Enaging power saving mode now!");
+
+    #ifdef POWER_SAVE
+        senseBoxIO.powerI2C(false);
+        senseBoxIO.powerUART(false);
+    #endif
+    for (;;) 
+    {
+        unsigned long now = millis();
+        unsigned long elapsed = now - start;
+        if (elapsed >= postingInterval)
+        {
+            #ifdef POWER_SAVE
+                senseBoxIO.powerI2C(true);
+                senseBoxIO.powerUART(true);
+                delay(250);
+                MCU.startAllSensors();
+                Serial.println("Warming up");
+                delay(10000);
+            #endif
+            return;
+        }
+    }
+
     }
