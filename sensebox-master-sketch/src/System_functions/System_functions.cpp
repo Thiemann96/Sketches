@@ -1,4 +1,4 @@
-
+#include "System_functions.h"
 void System_functions::connectToWlan(){
     senseBoxIO.statusNone();
   uint8_t status = WL_IDLE_STATUS;
@@ -221,6 +221,11 @@ void System_functions::sendData(){
       Serial.println("-Done. Waiting for server response...\n");
       delay(500);
     #endif
+    // Reading answer from server //
+    while (senseBox_client.available()){
+        char c = senseBox_client.read();
+        Serial.write(c);
+      }
   }
   else{
   // If connection failed report //
@@ -251,13 +256,23 @@ void System_functions::addMeasurementToCsv(const char *sensorId, int measurement
 }
 
 void System_functions::addMeasurementToCsv(const char *sensorId, long measurement){
-  String newRow = String(sensorId) + ',' + String(measurement) + '\n';
+  String newRow = String(sensorId) + ',' + String(measurement); // + '\n';
+  newRow +=       lastGPSDateTime.year+
+      lastGPSDateTime.month+
+      lastGPSDateTime.day+
+      lastGPSDateTime.hour+
+      lastGPSDateTime.minute+
+      lastGPSDateTime.second+
+      lastGPSLocation.longitude+
+      lastGPSLocation.latitude+
+      lastGPSLocation.altitude
   sensorDataCsv += newRow;
   #ifdef DEBUG_MODE
     Serial.print(newRow);
     delay(500);
   #endif
 }
+[String(parseFloat((json[PM25_ID] / 10).toFixed(1))),String(json["year"])+"-"+String(("0" + json["month"]).slice(-2))+"-"+String(("0" + json["day"]).slice(-2))+"T"+String(("0" + json["hour"]).slice(-2))+":"+String(("0" + json["minute"]).slice(-2))+":"+String(("0" + json["second"]).slice(-2))+"Z",[json["lng1"]+json["lng2"]/10000,json["lat1"]+json["lat2"]/10000]];
 
 void System_functions::readSensorsAndSendData(){
   #ifdef DEBUG_MODE
@@ -370,5 +385,26 @@ void System_functions::checkForWINC1500(){
       delay(1000);
     }
   }
+
+}
+
+void System_functions::startAllSensors(){
+      #ifdef HDC1080_CONNECTED
+        hdc.begin();
+    #endif
+    #ifdef BMP280_CONNECTED
+        bmp.begin();
+    #endif
+    #ifdef LIGHT_CONNECTED
+        veml.begin();
+        tsl.begin();
+    #endif
+    #ifdef SDS_CONNECTED
+        SDS_CONNECTED.begin(9600);
+    #endif
+    #ifdef GPS_CONNECTED
+        gps.begin();
+    #endif
+
 
 }

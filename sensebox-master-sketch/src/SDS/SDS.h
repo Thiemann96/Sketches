@@ -1,6 +1,5 @@
 #ifndef SDS_H
 #define SDS_H
-#include "SDS.cpp"
 class SDS011
 {
 	public:

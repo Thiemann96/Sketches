@@ -25,7 +25,7 @@
 
 // Uncomment the next line to get debugging messages printed on the Serial port
 // Do not leave this enabled for long time use
-// #define ENABLE_DEBUG
+#define ENABLE_DEBUG
 
 #ifdef ENABLE_DEBUG
 #define DEBUG(str) Serial.println(str)
@@ -35,15 +35,15 @@
 
 // Connected sensors
 // Temperatur
-//#define HDC1080_CONNECTED
+#define HDC1080_CONNECTED
 // rel. Luftfeuchte
-//#define HDC1080_CONNECTED
+#define HDC1080_CONNECTED
 // Luftdruck
-//#define BMP280_CONNECTED
+#define BMP280_CONNECTED
 // Beleuchtungsstärke
-//#define TSL45315_CONNECTED
+#define TSL45315_CONNECTED
 // UV-Intensität
-//#define VEML6070_CONNECTED
+#define VEML6070_CONNECTED
 // PM10
 #define SDS011_CONNECTED
 // PM2.5
@@ -103,6 +103,9 @@ static osjob_t sendjob;
 // cycle limitations).
 const unsigned TX_INTERVAL = 60;
 
+// Configure how many miliseconds(ms) the MCU should sleep after sending data
+// 300000 = 5 minutes
+const long time2sleep = 300000;
 // Pin mapping
 const lmic_pinmap lmic_pins = {
   .nss = PIN_XB1_CS,
@@ -156,6 +159,7 @@ void onEvent (ev_t ev) {
         DEBUG(F(" bytes of payload"));
       }
       // Schedule next transmission
+      send2Sleep(time2sleep);
       os_setTimedCallback(&sendjob, os_getTime()+sec2osticks(TX_INTERVAL), do_send);
       break;
     case EV_LOST_TSYNC:
@@ -251,14 +255,25 @@ void do_send(osjob_t* j){
         attempt++;
       }
     #endif
-
+    
     // Prepare upstream data transmission at the next possible time.
     LMIC_setTxData2(1, message.getBytes(), message.getLength(), 0);
     DEBUG(F("Packet queued"));
+
   }
   // Next TX is scheduled after TX_COMPLETE event.
 }
+void send2Sleep(long mills){
 
+     senseBoxIO.powerUART(false);
+     senseBoxIO.powerI2C(false);
+     delay(mills);
+     senseBoxIO.powerUART(true);
+     delay(250);
+     SDS_UART_PORT.begin(9600);
+     senseBoxIO.powerI2C(true);
+     delay(250);
+}
 void setup() {
   #ifdef ENABLE_DEBUG
     Serial.begin(9600);
@@ -267,6 +282,7 @@ void setup() {
 
   // RFM9X (LoRa-Bee) in XBEE1 Socket
   senseBoxIO.powerXB1(false); // power off to reset RFM9X
+  senseBoxIO.powerXB2(false);
   delay(250);
   senseBoxIO.powerXB1(true);  // power on
 

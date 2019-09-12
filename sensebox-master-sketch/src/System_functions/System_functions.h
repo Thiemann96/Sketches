@@ -17,6 +17,7 @@ class System_functions{
         void addMeasurementToCsv(const char *sensorId,long measurement);
   
     public:
+        void startAllSensors();
         void connectToWlan();
         void testSensors();
         void readSensorsAndSendData();
