@@ -263,6 +263,7 @@ void System_functions::addMeasurementToCsv(const char *sensorId, long measuremen
     delay(500);
   #endif
 }
+[String(parseFloat((json[PM25_ID] / 10).toFixed(1))),String(json["year"])+"-"+String(("0" + json["month"]).slice(-2))+"-"+String(("0" + json["day"]).slice(-2))+"T"+String(("0" + json["hour"]).slice(-2))+":"+String(("0" + json["minute"]).slice(-2))+":"+String(("0" + json["second"]).slice(-2))+"Z",[json["lng1"]+json["lng2"]/10000,json["lat1"]+json["lat2"]/10000]];
 
 void System_functions::readSensorsAndSendData(){
   #ifdef DEBUG_MODE
