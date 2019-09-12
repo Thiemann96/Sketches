@@ -35,15 +35,15 @@
 
 // Connected sensors
 // Temperatur
-//#define HDC1080_CONNECTED
+#define HDC1080_CONNECTED
 // rel. Luftfeuchte
-//#define HDC1080_CONNECTED
+#define HDC1080_CONNECTED
 // Luftdruck
-//#define BMP280_CONNECTED
+#define BMP280_CONNECTED
 // Beleuchtungsstärke
-//#define TSL45315_CONNECTED
+#define TSL45315_CONNECTED
 // UV-Intensität
-//#define VEML6070_CONNECTED
+#define VEML6070_CONNECTED
 // PM10
 #define SDS011_CONNECTED
 // PM2.5

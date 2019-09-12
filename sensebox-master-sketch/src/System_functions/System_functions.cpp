@@ -256,7 +256,16 @@ void System_functions::addMeasurementToCsv(const char *sensorId, int measurement
 }
 
 void System_functions::addMeasurementToCsv(const char *sensorId, long measurement){
-  String newRow = String(sensorId) + ',' + String(measurement) + '\n';
+  String newRow = String(sensorId) + ',' + String(measurement); // + '\n';
+  newRow +=       lastGPSDateTime.year+
+      lastGPSDateTime.month+
+      lastGPSDateTime.day+
+      lastGPSDateTime.hour+
+      lastGPSDateTime.minute+
+      lastGPSDateTime.second+
+      lastGPSLocation.longitude+
+      lastGPSLocation.latitude+
+      lastGPSLocation.altitude
   sensorDataCsv += newRow;
   #ifdef DEBUG_MODE
     Serial.print(newRow);
